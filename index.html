@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Time Duration Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="manifest" href="favicon/site.webmanifest">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <span style="font-size:22px;margin-right:6px">⏳</span>
+        <div>
+          <div class="title">timeculator</div>
+          <div class="subtitle">Professional time tools — Time & Date</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="contactOpen" class="contact-open" aria-haspopup="dialog">Contact</button>
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme" title="Toggle theme"></button>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <!-- Calculator Mode Selector -->
+        <div class="card mode-selector">
+          <div class="mode-tabs">
+            <button id="tabDuration" class="mode-tab active" data-mode="duration">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Time Duration
+            </button>
+            <button id="tabCalculator" class="mode-tab" data-mode="calculator">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                <line x1="8" y1="6" x2="16" y2="6"></line>
+                <line x1="8" y1="10" x2="16" y2="10"></line>
+                <line x1="8" y1="14" x2="16" y2="14"></line>
+              </svg>
+              Time Calculator
+            </button>
+          </div>
+        </div>
+
+        <!-- Time Duration Calculator -->
+        <div id="durationMode" class="card calculator-mode active">
+          <h2>Time Duration Calculator</h2>
+          <p class="muted" style="margin-top:8px">Pick start and end date/time.</p>
+
+          <div style="margin-top:14px" class="form-grid duration">
+            <div>
+              <label style="font-weight:600;margin-bottom:6px;display:block">Start Date</label>
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                </svg>
+                <input id="startDate" type="date" />
+              </div>
+            </div>
+            <div>
+              <label style="font-weight:600;margin-bottom:6px;display:block">Start Time</label>
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <input id="startTime" type="time" />
+              </div>
+            </div>
+
+            <div>
+              <label style="font-weight:600;margin-bottom:6px;display:block">End Date</label>
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                </svg>
+                <input id="endDate" type="date" />
+              </div>
+            </div>
+            <div>
+              <label style="font-weight:600;margin-bottom:6px;display:block">End Time</label>
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <input id="endTime" type="time" />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+            <div class="muted">If a date is empty, today's date is used. Leave time empty to assume 00:00.</div>
+            <label class="muted" style="display:flex;align-items:center;gap:8px">
+              Show seconds 
+              <input id="showSeconds" type="checkbox" style="margin-left:6px;cursor:pointer" />
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="calcDuration" class="primary">Calculate Duration</button>
+            <button id="clearDuration" class="ghost">Clear</button>
+          </div>
+
+          <div id="durationResult" class="result-card" style="margin-top:14px;display:none">
+            <div class="result-header">
+              <div class="big-number" id="durationMain">0d 0h 0m</div>
+              <div class="result-subtitle" id="durationSub">Detailed breakdown below</div>
+              <div class="result-pills" id="durationPills"></div>
+              <div class="result-meta" id="durationMeta"></div>
+            </div>
+            <div class="result-actions">
+              <button id="copyDuration" class="ghost">Copy</button>
+              <button id="shareDuration" class="ghost">Share</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Calculator (Block A ± Block B) -->
+        <div id="calculatorMode" class="card calculator-mode">
+          <h2>Time Calculator (Block A ± Block B)</h2>
+          <p class="muted" style="margin-top:8px">Enter Day / Hour / Minute / Second for each block, then choose Add or Subtract.</p>
+
+          <div style="margin-top:14px" class="form-grid blocks">
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M3 12h18"></path>
+              </svg>
+              <input id="aDays" type="number" inputmode="numeric" min="0" placeholder="Days" />
+              <div class="stepper">
+                <button class="step-up" data-target="aDays" type="button">+</button>
+                <button class="step-down" data-target="aDays" type="button">−</button>
+              </div>
+            </div>
+
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2v4"/><path d="M12 18v4"/>
+              </svg>
+              <input id="aHours" type="number" inputmode="numeric" min="0" max="23" placeholder="Hours" />
+              <div class="stepper">
+                <button class="step-up" data-target="aHours" type="button">+</button>
+                <button class="step-down" data-target="aHours" type="button">−</button>
+              </div>
+            </div>
+
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 12v6a2 2 0 0 1-2 2H5"/>
+              </svg>
+              <input id="aMinutes" type="number" inputmode="numeric" min="0" max="59" placeholder="Minutes" />
+              <div class="stepper">
+                <button class="step-up" data-target="aMinutes" type="button">+</button>
+                <button class="step-down" data-target="aMinutes" type="button">−</button>
+              </div>
+            </div>
+
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <input id="aSeconds" type="number" inputmode="numeric" min="0" max="59" placeholder="Seconds" />
+              <div class="stepper">
+                <button class="step-up" data-target="aSeconds" type="button">+</button>
+                <button class="step-down" data-target="aSeconds" type="button">−</button>
+              </div>
+            </div>
+
+            <div style="grid-column:1/-1;margin-top:6px">
+              <label style="font-weight:600;margin-bottom:6px;display:block">Operation</label>
+              <select id="opType2">
+                <option value="add">Add (A + B)</option>
+                <option value="subtract">Subtract (A − B)</option>
+              </select>
+            </div>
+
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M3 12h18"></path>
+              </svg>
+              <input id="bDays" type="number" inputmode="numeric" min="0" placeholder="Days" />
+              <div class="stepper">
+                <button class="step-up" data-target="bDays" type="button">+</button>
+                <button class="step-down" data-target="bDays" type="button">−</button>
+              </div>
+            </div>
+
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2v4"/><path d="M12 18v4"/>
+              </svg>
+              <input id="bHours" type="number" inputmode="numeric" min="0" max="23" placeholder="Hours" />
+              <div class="stepper">
+                <button class="step-up" data-target="bHours" type="button">+</button>
+                <button class="step-down" data-target="bHours" type="button">−</button>
+              </div>
+            </div>
+
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 12v6a2 2 0 0 1-2 2H5"/>
+              </svg>
+              <input id="bMinutes" type="number" inputmode="numeric" min="0" max="59" placeholder="Minutes" />
+              <div class="stepper">
+                <button class="step-up" data-target="bMinutes" type="button">+</button>
+                <button class="step-down" data-target="bMinutes" type="button">−</button>
+              </div>
+            </div>
+
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <input id="bSeconds" type="number" inputmode="numeric" min="0" max="59" placeholder="Seconds" />
+              <div class="stepper">
+                <button class="step-up" data-target="bSeconds" type="button">+</button>
+                <button class="step-down" data-target="bSeconds" type="button">−</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="calcTime2" class="primary">Calculate</button>
+            <button id="clearTime2" class="ghost">Clear</button>
+          </div>
+
+          <div id="timeResult" class="result-card" style="margin-top:14px;display:none">
+            <div class="result-header">
+              <div class="big-number" id="timeMain">0d 0h 0m</div>
+              <div class="result-subtitle" id="timeSub">Normalized result below</div>
+              <div class="result-pills" id="timePills"></div>
+              <div class="result-meta" id="timeMeta"></div>
+            </div>
+            <div class="result-actions">
+              <button id="copyTime" class="ghost">Copy</button>
+              <button id="shareTime" class="ghost">Share</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AD BETWEEN -->
+        <div id="ads-between-tools" class="ad-area" style="margin:22px 0">
+          <div class="muted" style="font-size:15px">Advertising</div>
+        </div>
+
+        <!-- Explanation -->
+        <div id="siteNotes" class="explanation-area" style="margin-top:18px">
+<h2>What is a Time Duration Calculator</h2>
+<p>A Time Duration Calculator is a tool that measures the length of time between two points. It can work with times, dates, or a combination of both. This makes it easy to find the exact number of hours, minutes, and seconds that pass from one moment to another.</p>
+<p>The calculator is designed to handle various situations, such as shifts crossing midnight or work periods spanning several days. It gives users quick and accurate results, reducing the chances of errors.</p>
+<h3>Why Use a Time Duration Calculator?</h3>
+<p>Using a Time Duration Calculator saves time and reduces mistakes. Manually counting hours, minutes, and seconds can be complex, especially when the time period crosses days or includes overnight shifts.</p>
+<p>It suits many needs, including tracking work hours, calculating billable time for clients, or measuring project durations. The calculator often supports both 12-hour and 24-hour formats and provides output in multiple units, including decimals.</p>
+<p>People who manage payroll or employee schedules find it particularly useful because it simplifies the process of adding up hours worked accurately. The tool is helpful for anyone wanting exact time measurements without doing all the math themselves.</p>
+<h3>How a Time Duration Calculator Simplifies Your Work</h3>
+<p>The calculator works by letting users input start and end times or dates, then pressing a button to get results instantly. This takes out the guesswork and complex time conversions.</p>
+<p>It automatically accounts for issues like shifts passing midnight or multiple-day intervals. Many calculators provide breakdowns in different formats, such as total days, hours, minutes, and seconds, which helps with detailed time tracking.</p>
+<p>Additionally, some calculators convert the time duration into decimal form, which is useful for payroll and billing. The simple interface makes it accessible, even for people with little time calculation experience. This streamlines tasks that would otherwise be slow and prone to error.</p>
+
+<h2>How to Use a Time Duration Calculator</h2>
+<p>A time duration calculator requires input of start and end times or dates to work properly. Users should know how to enter the information, handle common timing situations, and read the results clearly.</p>
+<h3>Step-by-Step Instructions</h3>
+<p>First, the user inputs the start date and time in the calculator. This can include the year, month, day, hour, and minute.</p>
+<p>Next, the user inputs the end date and time. Most calculators allow for entries crossing days, months, or even years.</p>
+<p>After both inputs are entered, the user presses a "Calculate" button. The tool processes the difference between the two points in time.</p>
+<p>Some calculators also let users add or subtract extra time, such as breaks or pauses, and convert results into formats like hours or decimal fractions.</p>
+<h3>Common Calculation Scenarios</h3>
+<p>Calculators handle a variety of cases like overnight shifts, where start time is before midnight and end time is after.</p>
+<p>They also work for multi-day durations, such as project timings spanning several days or weeks.</p>
+<p>Calculating work hours, employee scheduling, or billing clients often involves inputting exact clock times and getting hours, minutes, and seconds as output.</p>
+<p>Additionally, these tools can be used for vacations or deadlines by easily showing the total time remaining or elapsed.</p>
+<h3>Interpreting Results</h3>
+<p>Results typically appear in days, hours, minutes, and seconds to give a clear measure of total duration.</p>
+<p>Decimal formats may be shown, useful for payroll or work tracking, where hours worked need to be logged precisely.</p>
+<p>Users should check if the calculator accounts for time zones or daylight savings changes, depending on the tool.</p>
+<p>Clear labels on output help prevent confusion between elapsed time and clock time. Users should always verify the start and end inputs to ensure result accuracy.</p>
+
+<h2>Features and Benefits</h2>
+<p>The calculator supports various time input styles and handles complex date and time differences with precision. It also offers ways to tailor calculations to fit specific user needs, making it flexible for many uses.</p>
+<h3>Time Formats Supported</h3>
+<p>The calculator accepts multiple time formats, including 12-hour and 24-hour clocks. It works seamlessly with times including seconds and milliseconds for precise measurements. Users can input times with or without AM/PM indicators, depending on their preference or the context required.</p>
+<p>It also supports different date formats like MM/DD/YYYY and DD/MM/YYYY. This versatility helps avoid confusion across regions and systems. Such flexibility ensures that the calculator fits varied personal, business, and professional needs without forcing users to change their standard time notation.</p>
+<h3>Handling Date and Time Differences</h3>
+<p>This tool calculates exact durations between two points in time, even if they span multiple days. It manages overnight shifts and crossing midnight without issues. The calculator accounts for leap years and varying month lengths to maintain accuracy over long periods.</p>
+<p>It can show results in hours, minutes, and seconds or decimally for billing or tracking purposes. With the ability to subtract and add times, it offers precise tracking for work hours, project timelines, and other schedules that require exact time duration.</p>
+<h3>Customization Options</h3>
+<p>Users can customize how breaks and pauses affect total time. This feature is useful in payroll and productivity tracking, allowing net work hours to reflect actual labor time. Some versions include options to add notes or categorize time entries, enhancing organization.</p>
+<p>Settings for time zone differences and automatic daylight saving changes help maintain accuracy for users in different regions. Custom output formats and rounding options provide further control, making the calculator adaptable to specific reporting or billing standards.</p>
+        </div>
+      </section>
+
+      <!-- Sidebar -->
+      <aside>
+        <div class="card">
+          <h3 style="margin:0 0 8px 0">Quick Tools & Ads</h3>
+          <div style="display:grid;gap:12px">
+            <div class="sidebar-item">
+              <div class="icon">⏱️</div>
+              <div style="flex:1">
+                <div style="font-weight:700">Quick Seconds</div>
+                <div class="muted" style="font-size:13px">Apply seconds to Block A quickly.</div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <input id="quickSeconds" type="number" placeholder="seconds" style="padding:10px;border-radius:8px;border:1px solid var(--input-border);flex:1;background:var(--input-bg);color:var(--text)" />
+                  <button id="quickAdd" class="primary">Apply</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar-item">
+              <div class="icon">📤</div>
+              <div style="flex:1">
+                <div style="font-weight:700">Export</div>
+                <div class="muted" style="font-size:13px">Copy or print results.</div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button id="copyAll" class="ghost">Copy All</button>
+                  <button id="printPage" class="ghost">Print</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar-item">
+              <div class="icon">📢</div>
+              <div style="flex:1">
+                <div style="font-weight:700">Ad Slots</div>
+                <div class="muted" style="font-size:13px">Placeholders for ad scripts.</div>
+                <div style="display:grid;gap:8px;margin-top:8px">
+                  <div style="padding:8px;border:1px dashed var(--input-border);border-radius:8px;text-align:center">300×250</div>
+                  <div style="padding:8px;border:1px dashed var(--input-border);border-radius:8px;text-align:center">728×90</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer style="margin-top:22px;text-align:center;color:var(--muted)">
+      <div>© <span id="curYear"></span> Timeculator</div>
+    </footer>
+  </div>
+
+  <!-- CONTACT MODAL -->
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+      <div class="modal-head" style="margin-bottom:12px">
+        <div style="display:flex;gap:12px;align-items:center">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5l-4-4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <div>
+            <div id="contactTitle" style="font-weight:700">Contact Us</div>
+            <div class="muted" style="font-size:13px">We typically reply within 24 hours</div>
+          </div>
+        </div>
+        <button id="closeModal" class="close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <form id="contactForm" action="https://formspree.io/f/yourFormID" method="POST" style="display:grid;gap:10px">
+        <label class="muted" style="font-weight:600;font-size:13px">Name</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M20 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M4 21v-2a4 4 0 0 1 3-3.87"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <input id="contactName" name="name" type="text" placeholder="Your name" required />
+        </div>
+
+        <label class="muted" style="font-weight:600;font-size:13px">Email</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M4 4h16v16H4z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <input id="contactEmail" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+
+        <label class="muted" style="font-weight:600;font-size:13px">Message</label>
+        <textarea id="contactMessage" name="message" rows="5" placeholder="How can we help?" required style="padding-left:14px"></textarea>
+
+        <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end">
+          <div id="formspreeStatus" class="form-status muted" aria-live="polite"></div>
+          <button type="submit" class="primary">Send message</button>
+          <button type="button" id="cancelModal" class="ghost">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
